@@ -39,8 +39,8 @@ if uploaded_file:
     df= pd.read_csv(uploaded_file)
 
 
-    df["date"] = df["date"].astype('datetime64')
-    df["mill_code"] = df["mill_code"].astype('string')
+    #df["date"] = df["date"].astype('datetime64')
+    #df["mill_code"] = df["mill_code"].astype('string')
 
 
 
