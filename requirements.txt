@@ -1,5 +1,4 @@
 altair
 pandas
 streamlit
-matplotlib
-plotly
+plotly-express
