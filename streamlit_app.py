@@ -123,13 +123,14 @@ if uploaded_file:
     #df["date"] = df["date"].astype('datetime64')
     #df["mill_code"] = df["mill_code"].astype('string')
 
+    if options == "OER Performance":
+        plotOER(df)
+    elif options =='Key Stats':
+        keyStats(df)
+    elif options == 'Exploratory Plot':
+        data_plot(df)
+    elif options =='Home':
+        home_page(df)
 
-
-if options == "OER Performance":
-    plotOER(df)
-elif options =='Key Stats':
-    keyStats(df)
-elif options == 'Exploratory Plot':
-    data_plot(df)
-elif options =='Home':
-    home_page(df)
+else: 
+    st.write("<--- Please upload the input file")
