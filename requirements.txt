@@ -2,4 +2,4 @@ pandas
 streamlit
 plotly-express
 plotly
-streamlit_option_menu
+streamlit-option-menu
