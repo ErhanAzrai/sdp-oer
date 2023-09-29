@@ -2,4 +2,5 @@ pandas
 streamlit
 plotly-express
 plotly
+pycaret
 streamlit-option-menu
