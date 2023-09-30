@@ -32,10 +32,10 @@ def plotOER(dataframe):
 
 def keyStats(dataframe):
     st.header("Key Operation Indicators")
-    st.write("These are important indicators in a palm oil mills")
+    st.write("Strategy: Performance Matrix Cascade through Value Drivers")
 
     st.subheader('Quality of the Crop')
-
+    st.write("Quality of the Crop depends on two factors - Seed and Estate Condition")
 
 
     dt = df[['date','A_Crop%', 'mill_code']]
@@ -44,6 +44,15 @@ def keyStats(dataframe):
     st.plotly_chart(figCropA)
     st.write('For a each mill, Crop A has a positive correlation with Oil Extraction Rate. One percentage point increase in Crop A, increases OER by between 0.2 and 0.4 point')
 
+    st.write("Note: Average age of the plants should go here")
+
+    dt = df[['date','%_True_Mesocarp', 'mill_code']]
+    dt['%_True_Mesocarp'] = dt.groupby('mill_code')['%_True_Mesocarp'].rolling(window=28).mean().reset_index(level=0, drop=True)
+    figTrueMesoCarp = px.line(dt, x="date", y = "%_True_Mesocarp", color = "mill_code", title="Crop A as Percentage of Total (28-day moving average)")
+    st.plotly_chart(figTrueMesoCarp)
+    st.write('True Mesocarp Percentage has a positive correlation with Oil Extraction Rate. One percentage point increase in Crop A, increases OER by between 0.2 and 0.4 point')
+
+
     st.subheader('Quality of Ripeness')
 
     dt = df[['date','Pct_Ripe', 'mill_code']]
@@ -51,10 +60,17 @@ def keyStats(dataframe):
     figRipe = px.line(dt, x="date", y = "Ripe%", color = "mill_code", title="Ripe as Percentage of Total (28-day moving average)")
     st.plotly_chart(figRipe)
 
-    dt = df[['date','Pct_OverRipe', 'mill_code']]
-    dt['moving_ave'] = dt.groupby('mill_code')['Pct_OverRipe'].rolling(window=28).mean().reset_index(level=0, drop=True)
-    figOverripe = px.line(dt, x="date", y = "moving_ave", color = "mill_code", title="Overripe A as Percentage of Total (28-day moving average)")
-    st.plotly_chart(figOverripe)
+    dt = df[['date','DOBI', 'mill_code']]
+    dt['moving_ave'] = dt.groupby('mill_code')['DOBI'].rolling(window=28).mean().reset_index(level=0, drop=True)
+    figDOBI = px.line(dt, x="date", y = "moving_ave", color = "mill_code", title="DOBI value(28-day moving average)")
+    st.plotly_chart(figDOBI)
+    st.write('A higher DOBI value indicates the fruit is more fresh, ripe and free of contaminates')
+    DOBIdata = {
+    'DOBI Range': ['1.68 – 2.30', '2.31 – 2.92', '2.93 – 3.24', '> 3.24'],
+    'DOBI Grade': ['Poor', 'Fair', 'Good', 'Excellent']
+    }
+    DOBIconversion = pd.DataFrame(DOBIdata)
+    st.write(DOBIconversion)
 
     st.subheader('Mill Operation')
 
