@@ -12,10 +12,15 @@ def plotOER(dataframe):
     st.header("Oil Extraction Rate Performance")
     st.write('Oil extraction rate (OER) and kernel extraction rate (KER) are two indicators of efficiency which can indirectly influence the profitability of any plantation enterprise. Being an integrated oil palm venture, this is of prime importance, because the final arbiter of commercial success is the oil yield per ha and not just FFB yield per ha alone.')
 
-    fig = px.line(df, x="date", y="%_OER", color="mill_code")
-    st.plotly_chart(fig)
-    st.write("OER hovers around 17-22 handle")
+    #fig = px.line(df, x="date", y="%_OER", color="mill_code")
+    #st.plotly_chart(fig)
+    #st.write("OER hovers around 17-22 handle.The usual oil extraction rate for a ripe tenera bunch from a mature tree is between 22—24 percent, or 220—240 kg of oil per tonne of fresh fruit bunches.")
 
+    dt = df[['date','%_OER', 'mill_code']]
+    dt['%_OER'] = dt.groupby('mill_code')['%_OER'].rolling(window=28).mean().reset_index(level=0, drop=True)
+    figOER = px.line(dt, x="date", y = "%_OER", color = "mill_code", title="Oil Extraction Rate (28-day moving average)")
+    st.plotly_chart(figOER)
+    st.write("OER hovers around 17-22 handle.The usual oil extraction rate for a ripe tenera bunch from a mature tree is between 22—24 percent, or 220—240 kg of oil per tonne of fresh fruit bunches.")
 
     df['date'] = pd.to_datetime(df['date'])
     #df.set_index('date', inplace =True)
@@ -109,13 +114,6 @@ def data_plot(dataframe):
     #plot.update_traces(marker=(dict(color=col)))
     st.plotly_chart(plot)
 
-def home_page(dataframe):
-    st.write('OER = (Quality of Crop) + (Quality of Ripeness) + (Efficiency of Mill)')
-    
-    homecol1, homecol2 = st.columns([3,1])
-    with homecol2:
-       millcode = option_menu('Select Mill Code', options = dataframe['mill_code'].unique().tolist())
-
     
 
 st.title("Mill Statistics Data Explorer")
@@ -127,7 +125,7 @@ st.sidebar.title('Navigate')
 uploaded_file = st.sidebar.file_uploader("Upload your file here")
 
 with st.sidebar:
-    options = option_menu(None, options=['Home','OER Performance', 'Key Stats', 'Exploratory Plot'])
+    options = option_menu(None, options=['OER Performance', 'Key Stats', 'Exploratory Plot'])
 
 
 if uploaded_file:
@@ -144,8 +142,7 @@ if uploaded_file:
         keyStats(df)
     elif options == 'Exploratory Plot':
         data_plot(df)
-    elif options =='Home':
-        home_page(df)
+
 
 else: 
     st.write("<--- Please upload the input file")
